@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
 import "./Ownable.sol";
 import "./SafeMath.sol";
@@ -20,8 +20,26 @@ contract ZoiToken is Ownable {
   // Amount of ZOI issued.
   uint256 public zoiIssued = 0;
 
+  address public zoiIssuer;
+
   function ZoiToken() public {
 
+  }
+
+  modifier onlyZoiIssuer {
+    require(msg.sender == zoiIssuer);
+    _;
+  }
+
+  /**
+     * @dev Allows contract owner to set the ZOI issuing authority.
+     * @param _zoiIssuer address of ZOI issuing authority.
+     */
+  function setZoiIssuer(address _zoiIssuer)
+  external
+  onlyOwner
+  {
+    zoiIssuer = _zoiIssuer;
   }
 
   /**
@@ -30,6 +48,7 @@ contract ZoiToken is Ownable {
    * @param _zoiAmount amount of ZOI to issue.
    */
   function issueZoi(address _user, uint256 _zoiAmount)
+  onlyZoiIssuer
   public
   returns(bool)
   {
@@ -39,7 +58,7 @@ contract ZoiToken is Ownable {
 
     balances[_user] = balances[_user].add(_zoiAmount);
     zoiIssued = newAmountIssued;
-    ZoiIssued(tdeIssuer, _user, _zoiAmount, block.timestamp);
+    ZoiIssued(zoiIssuer, _user, _zoiAmount, block.timestamp);
 
     return true;
   }
@@ -56,7 +75,7 @@ contract ZoiToken is Ownable {
   }
 
   /**
-   * @dev Transfer tokens from one address to another. Trading limited - requires the TDE to have ended.
+   * @dev Transfer tokens from one address to another.
    * @param _from address The address which you want to send tokens from
    * @param _to address The address which you want to transfer to
    * @param _value uint256 the amount of tokens to be transferred
@@ -65,7 +84,6 @@ contract ZoiToken is Ownable {
   public
   returns (bool)
   {
-    if (!isFinalized) return false;
     require(_to != address(0));
     require(_value <= balances[_from]);
     require(_value <= allowed[_from][msg.sender]);
@@ -78,7 +96,7 @@ contract ZoiToken is Ownable {
   }
 
   /**
- * @dev Transfer token for a specified address.  Trading limited - requires the TDE to have ended.
+ * @dev Transfer token for a specified address.
  * @param _to The address to transfer to.
  * @param _value The amount to be transferred.
  */
@@ -86,7 +104,6 @@ contract ZoiToken is Ownable {
   public
   returns (bool)
   {
-    if (!isFinalized) return false;
     require(_to != address(0));
     require(_value <= balances[msg.sender]);
 
@@ -170,5 +187,4 @@ contract ZoiToken is Ownable {
     Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
-}
 }
