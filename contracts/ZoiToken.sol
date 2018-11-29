@@ -22,7 +22,7 @@ contract ZoiToken is Ownable {
 
   address public zoiIssuer;
 
-  function ZoiToken() public {
+  constructor() public {
 
   }
 
@@ -33,7 +33,7 @@ contract ZoiToken is Ownable {
 
   /**
      * @dev Allows contract owner to set the ZOI issuing authority.
-     * @param _zoiIssuer address of ZOI issuing authority.
+     * @param _zoiIssuer address of ZOI issuing authority (staking contract).
      */
   function setZoiIssuer(address _zoiIssuer)
   external
@@ -58,7 +58,7 @@ contract ZoiToken is Ownable {
 
     balances[_user] = balances[_user].add(_zoiAmount);
     zoiIssued = newAmountIssued;
-    ZoiIssued(zoiIssuer, _user, _zoiAmount, block.timestamp);
+    emit ZoiIssued(zoiIssuer, _user, _zoiAmount, block.timestamp);
 
     return true;
   }
@@ -91,7 +91,7 @@ contract ZoiToken is Ownable {
     balances[_from] = balances[_from].sub(_value);
     balances[_to] = balances[_to].add(_value);
     allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
-    Transfer(_from, _to, _value);
+    emit Transfer(_from, _to, _value);
     return true;
   }
 
@@ -109,7 +109,7 @@ contract ZoiToken is Ownable {
 
     balances[msg.sender] = balances[msg.sender].sub(_value);
     balances[_to] = balances[_to].add(_value);
-    Transfer(msg.sender, _to, _value);
+    emit Transfer(msg.sender, _to, _value);
     return true;
   }
 
@@ -129,7 +129,7 @@ contract ZoiToken is Ownable {
   {
     require(_spender != address(0));
     allowed[msg.sender][_spender] = _value;
-    Approval(msg.sender, _spender, _value);
+    emit Approval(msg.sender, _spender, _value);
     return true;
   }
 
@@ -170,7 +170,7 @@ contract ZoiToken is Ownable {
   returns (bool success)
   {
     allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue);
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 
@@ -184,7 +184,7 @@ contract ZoiToken is Ownable {
     } else {
       allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);
     }
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 }
