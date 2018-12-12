@@ -1,80 +1,61 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.0;
 
-import "./Ownable.sol";
 import "./SafeMath.sol";
-import "./IZoiToken.sol";
+import "./Ownable.sol";
+import "./ERC20.sol";
 
-contract ZoiToken is Ownable, IZoiToken {
+/** This contract is written strictly in testing purposes as an example of a simple ERC20 token
+  * Will be replaced with real FTT in production
+  */
+
+contract TestFTT is Ownable, ERC20 {
 
   using SafeMath for uint256;
 
-  string public constant name = "Zoi Token";
-  string public symbol = "ZOI";
+  string public constant name = "TestFTT";
+  string public symbol = "TFTT";
   uint8 public constant decimals = 18;
+  uint256 constant TFTT_AMOUNT = 10000000000000000000000;
 
   mapping(address => uint256) public balances;
   mapping (address => mapping (address => uint256)) internal allowed;
 
   event Approval(address indexed owner, address indexed spender, uint256 value);
   event Transfer(address indexed from, address indexed to, uint256 value);
-  event ZoiIssued(address indexed from, address indexed to, uint256 indexed amount, uint256 timestamp);
-  // Amount of ZOI issued.
-  uint256 public zoiIssued = 0;
+  event TfttIssued(address indexed from, address indexed to, uint256 indexed amount, uint256 timestamp);
 
-  address public zoiIssuer;
+  uint256 public tfttIssued = 0;
 
-  constructor() public {
+  address public tfttIssuer;
 
+  constructor(address _user) public {
+    uint256 newAmountIssued = tfttIssued.add(TFTT_AMOUNT);
+    require(_user != address(0));
+    balances[_user] = balances[_user].add(TFTT_AMOUNT);
+    tfttIssued = newAmountIssued;
+    emit TfttIssued(tfttIssuer, _user, TFTT_AMOUNT, block.timestamp);
   }
 
-  modifier onlyZoiIssuer {
-    require(msg.sender == zoiIssuer);
+
+  modifier onlyTfttIssuer {
+    require(msg.sender == tfttIssuer);
     _;
   }
 
-  /**
-     * @dev Allows contract owner to set the ZOI issuing authority.
-     * @param _zoiIssuer address of ZOI issuing authority (staking contract).
-     */
-  function setZoiIssuer(address _zoiIssuer)
-  onlyOwner
-  external
-  returns(address)
+  function issueTftt(address _user, uint256 _tfttAmount)
+      onlyTfttIssuer
+      public
+      returns(bool)
   {
-    zoiIssuer = _zoiIssuer;
-    return zoiIssuer;
-  }
-
-  /**
-   * @dev Issues ZOI to entitled accounts.
-   * @param _user address to issue ZOI to.
-   * @param _zoiAmount amount of ZOI to issue.
-   */
-  function issueZoi(address _user, uint256 _zoiAmount)
-  onlyZoiIssuer
-  external
-  returns(bool)
-  {
-    uint256 newAmountIssued = zoiIssued.add(_zoiAmount);
+    uint256 newAmountIssued = tfttIssued.add(_tfttAmount);
     require(_user != address(0));
-    require(_zoiAmount > 0);
+    require(_tfttAmount > 0);
 
-    balances[_user] = balances[_user].add(_zoiAmount);
-    zoiIssued = newAmountIssued;
-    emit ZoiIssued(zoiIssuer, _user, _zoiAmount, block.timestamp);
+    balances[_user] = balances[_user].add(_tfttAmount);
+    tfttIssued = newAmountIssued;
+    emit TfttIssued(tfttIssuer, _user, _tfttAmount, block.timestamp);
 
     return true;
-  }
-
-  /**
-   * @dev Returns amount of ZOI issued.
-   */
-  function zoiIssued()
-  external
-  view
-  returns (uint256)
-  {
-    return zoiIssued;
   }
 
   /**
@@ -84,8 +65,8 @@ contract ZoiToken is Ownable, IZoiToken {
    * @param _value uint256 the amount of tokens to be transferred
    */
   function transferFrom(address _from, address _to, uint256 _value)
-  public
-  returns (bool)
+      public
+      returns (bool)
   {
     require(_to != address(0));
     require(_value <= balances[_from]);
@@ -99,13 +80,13 @@ contract ZoiToken is Ownable, IZoiToken {
   }
 
   /**
- * @dev Transfer token for a specified address.
- * @param _to The address to transfer to.
- * @param _value The amount to be transferred.
- */
+  * @dev Transfer token for a specified address.
+  * @param _to The address to transfer to.
+  * @param _value The amount to be transferred.
+  */
   function transfer(address _to, uint256 _value)
-  public
-  returns (bool)
+      public
+      returns (bool)
   {
     require(_to != address(0));
     require(_value <= balances[msg.sender]);
@@ -127,8 +108,8 @@ contract ZoiToken is Ownable, IZoiToken {
    * @param _value The amount of tokens to be spent.
    */
   function approve(address _spender, uint256 _value)
-  public
-  returns (bool)
+      public
+      returns (bool)
   {
     require(_spender != address(0));
     allowed[msg.sender][_spender] = _value;
@@ -142,9 +123,9 @@ contract ZoiToken is Ownable, IZoiToken {
   * @return An uint256 representing the amount owned by the passed address.
   */
   function balanceOf(address _owner)
-  public
-  view
-  returns (uint256 balance)
+      public
+      view
+      returns (uint256 balance)
   {
     return balances[_owner];
   }
@@ -156,9 +137,9 @@ contract ZoiToken is Ownable, IZoiToken {
    * @return A uint256 specifying the amount of tokens still available for the spender.
    */
   function allowance(address _owner, address _spender)
-  public
-  view
-  returns (uint256)
+      public
+      view
+      returns (uint256)
   {
     return allowed[_owner][_spender];
   }
@@ -169,8 +150,8 @@ contract ZoiToken is Ownable, IZoiToken {
    * the first transaction is mined)
    */
   function increaseApproval (address _spender, uint _addedValue)
-  public
-  returns (bool success)
+      public
+      returns (bool success)
   {
     allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue);
     emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
@@ -178,14 +159,14 @@ contract ZoiToken is Ownable, IZoiToken {
   }
 
   function decreaseApproval (address _spender, uint _subtractedValue)
-  public
-  returns (bool success)
+      public
+      returns (bool success)
   {
     uint oldValue = allowed[msg.sender][_spender];
     if (_subtractedValue > oldValue) {
-      allowed[msg.sender][_spender] = 0;
+    allowed[msg.sender][_spender] = 0;
     } else {
-      allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);
+    allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);
     }
     emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;

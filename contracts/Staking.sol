@@ -1,7 +1,7 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.20;
 import "./Ownable.sol";
 import "./SafeMath.sol";
-import "./ZoiToken.sol";
+import "./IZoiToken.sol";
 import "./ERC20.sol";
 
 
@@ -9,17 +9,13 @@ contract Staking is Ownable {
 
   using SafeMath for uint256;
 
-  uint BIG_NUMBER = 10**18;
-  uint DECIMAL = 10**3;
-
   struct stakingInfo {
     uint256 amount;
     bool requested;
-    uint releaseDate;
   }
 
-  ZoiToken private zoiToken;
-  ERC20 private fttToken;
+  IZoiToken public zoiToken;
+  ERC20 public fttToken;
 
   mapping (address => mapping(address => stakingInfo)) public StakeMap;
   mapping (address => uint) public tokenTotalStaked;
@@ -30,18 +26,20 @@ contract Staking is Ownable {
   constructor() public {
   }
 
-  function setZoiToken(address newZoi) onlyOwner {
-    zoiToken = ZoiToken(newZoi);
+  /**
+    * @dev set an address for ZOI token to be able to call issueZoi() function while claiming tokens
+    * @param newZoi proper address of ZOI token. Could be upgraded in case of different versions/releases
+    */
+  function setZoiToken(IZoiToken newZoi) onlyOwner {
+    zoiToken = IZoiToken(newZoi);
   }
 
+  /**
+    * @dev set an address for FTT token to be able to call issueZoi() function while claiming tokens
+    * @param newFtt proper address of FTT token. Could be upgraded in case of different versions/releases
+    */
   function setFttToken(address newFtt) onlyOwner {
     fttToken = ERC20(newFtt);
-  }
-
-
-  //for tests only
-  function setZoiIssuer(address issuer) external {
-    zoiToken.setZoiIssuer(issuer);
   }
 
   /**
@@ -50,15 +48,21 @@ contract Staking is Ownable {
     * To meet track and trace regulatory requirements, pharmaceutical companies can stake 100 FTT tokens to
     * generate a batch*** of Compliance Tracking tokens
     */
-
-  function stakeFtt(uint256 _amount) external returns (bool) {
-    require(_amount >= 100 ether); //convert properly from wei
+  function stakeFtt(uint256 _amount) public returns (bool) {
+    require(_amount >= 100000000000000000000); //TODO: proper representation of 18 decimals
     fttToken.transferFrom(msg.sender, address(this), _amount);
-    claim(msg.sender);
     StakeMap[fttToken][msg.sender].amount = StakeMap[fttToken][msg.sender].amount.add(_amount);
     tokenTotalStaked[fttToken] = tokenTotalStaked[fttToken].add(_amount);
     emit Staked(_amount, StakeMap[fttToken][msg.sender].amount, tokenTotalStaked[fttToken]);
     return true;
+  }
+
+  /**
+    * @dev returns staked amount per user
+    * @param _user the specific address of person who staked
+    */
+  function getStakedAmount(address _user) public view returns(uint256) {
+    return StakeMap[fttToken][_user].amount;
   }
 
   /**
@@ -69,11 +73,25 @@ contract Staking is Ownable {
     uint256 stakedAmount = StakeMap[fttToken][msg.sender].amount;
     //the amount per token for this user for this claim
     uint256 claimableAmount = stakedAmount.mul(5); //total amount that can be claimed by this user
-    claimableAmount = claimableAmount.mul(DECIMAL); //simulate floating point operations
-    claimableAmount = claimableAmount.div(BIG_NUMBER); //simulate floating point operations
-    zoiTokenContract.issueZoi(_receiver, claimableAmount);
+    zoiToken.issueZoi(_receiver, claimableAmount);
     emit Claimed(claimableAmount, stakedAmount);
     return claimableAmount;
 
   }
+
+  /**
+    * @dev releases staked FTT tokens to the sender
+    * @param _amount amount of FTT to be released to owner
+    */
+  function releaseStake(uint256 _amount) public returns (bool) {
+    require(StakeMap[fttToken][msg.sender].amount > 0);
+    tokenTotalStaked[fttToken] = tokenTotalStaked[fttToken].sub(_amount);
+    fttToken.transfer(msg.sender, _amount);
+    StakeMap[fttToken][msg.sender].amount = StakeMap[fttToken][msg.sender].amount.sub(_amount);
+  }
+
+  /**
+    * @dev for receiving a plain Ether for the contract to be able to call ZoiToken. Could be used only by contract owner
+    */
+  function() payable onlyOwner {}
 }
