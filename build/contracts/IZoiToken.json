@@ -1,6 +1,29 @@
 {
-  "contractName": "ERC20Basic",
+  "contractName": "IZoiToken",
   "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
     {
       "constant": true,
       "inputs": [],
@@ -16,26 +39,31 @@
       "type": "function"
     },
     {
-      "anonymous": false,
+      "constant": false,
       "inputs": [
         {
-          "indexed": true,
           "name": "from",
           "type": "address"
         },
         {
-          "indexed": true,
           "name": "to",
           "type": "address"
         },
         {
-          "indexed": false,
           "name": "value",
           "type": "uint256"
         }
       ],
-      "name": "Transfer",
-      "type": "event"
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": true,
@@ -78,95 +106,227 @@
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_zoiIssuer",
+          "type": "address"
+        }
+      ],
+      "name": "setZoiIssuer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "name": "_zoiAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "issueZoi",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "zoiIssued",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     }
   ],
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.23;\n\ncontract ERC20Basic {\n  uint256 public totalSupply;\n  function balanceOf(address who) public view returns (uint256);\n  function transfer(address to, uint256 value) public returns (bool);\n  event Transfer(address indexed from, address indexed to, uint256 value);\n}",
-  "sourcePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/ERC20Basic.sol",
+  "source": "pragma solidity ^0.4.20;\n\nimport \"./ERC20.sol\";\n\ncontract IZoiToken is ERC20 {\n  function setZoiIssuer(address _zoiIssuer) external returns(address);\n  function issueZoi(address _user, uint256 _zoiAmount) external returns(bool);\n  function zoiIssued() external view returns (uint256);\n}\n",
+  "sourcePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/IZoiToken.sol",
   "ast": {
-    "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/ERC20Basic.sol",
+    "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/IZoiToken.sol",
     "exportedSymbols": {
-      "ERC20Basic": [
-        71
+      "IZoiToken": [
+        98
       ]
     },
-    "id": 72,
+    "id": 99,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 44,
+        "id": 73,
         "literals": [
           "solidity",
           "^",
           "0.4",
-          ".23"
+          ".20"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:1"
+        "src": "0:24:2"
       },
       {
-        "baseContracts": [],
-        "contractDependencies": [],
+        "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/ERC20.sol",
+        "file": "./ERC20.sol",
+        "id": 74,
+        "nodeType": "ImportDirective",
+        "scope": 99,
+        "sourceUnit": 43,
+        "src": "26:21:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 75,
+              "name": "ERC20",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 42,
+              "src": "71:5:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC20_$42",
+                "typeString": "contract ERC20"
+              }
+            },
+            "id": 76,
+            "nodeType": "InheritanceSpecifier",
+            "src": "71:5:2"
+          }
+        ],
+        "contractDependencies": [
+          42,
+          71
+        ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 71,
+        "id": 98,
         "linearizedBaseContracts": [
+          98,
+          42,
           71
         ],
-        "name": "ERC20Basic",
+        "name": "IZoiToken",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": false,
-            "id": 46,
-            "name": "totalSupply",
-            "nodeType": "VariableDeclaration",
-            "scope": 71,
-            "src": "50:26:1",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
-            },
-            "typeName": {
-              "id": 45,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "50:7:1",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
             "body": null,
             "documentation": null,
-            "id": 53,
+            "id": 83,
             "implemented": false,
             "isConstructor": false,
-            "isDeclaredConst": true,
+            "isDeclaredConst": false,
             "modifiers": [],
-            "name": "balanceOf",
+            "name": "setZoiIssuer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 49,
+              "id": 79,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 48,
-                  "name": "who",
+                  "id": 78,
+                  "name": "_zoiIssuer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 53,
-                  "src": "99:11:1",
+                  "scope": 83,
+                  "src": "103:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -174,10 +334,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 47,
+                    "id": 77,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "99:7:1",
+                    "src": "103:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -187,69 +347,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "98:13:1"
+              "src": "102:20:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 52,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 51,
+                  "id": 81,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 53,
-                  "src": "133:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 50,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "133:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "132:9:1"
-            },
-            "scope": 71,
-            "src": "80:62:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 62,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "transfer",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 58,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 55,
-                  "name": "to",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "163:10:1",
+                  "scope": 83,
+                  "src": "140:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -257,10 +368,59 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 54,
+                    "id": 80,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "163:7:1",
+                    "src": "140:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "139:9:2"
+            },
+            "scope": 98,
+            "src": "81:68:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 92,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "issueZoi",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 88,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 85,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 92,
+                  "src": "170:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 84,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -271,11 +431,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 57,
-                  "name": "value",
+                  "id": 87,
+                  "name": "_zoiAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "175:13:1",
+                  "scope": 92,
+                  "src": "185:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -283,10 +443,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 56,
+                    "id": 86,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "175:7:1",
+                    "src": "185:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -296,20 +456,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "162:27:1"
+              "src": "169:35:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 61,
+              "id": 91,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 60,
+                  "id": 90,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "206:4:1",
+                  "scope": 92,
+                  "src": "222:4:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -317,10 +477,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 59,
+                    "id": 89,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "206:4:1",
+                    "src": "222:4:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -330,86 +490,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "205:6:1"
+              "src": "221:6:2"
             },
-            "scope": 71,
-            "src": "145:67:1",
+            "scope": 98,
+            "src": "152:76:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
-            "visibility": "public"
+            "visibility": "external"
           },
           {
-            "anonymous": false,
+            "body": null,
             "documentation": null,
-            "id": 70,
-            "name": "Transfer",
-            "nodeType": "EventDefinition",
+            "id": 97,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "zoiIssued",
+            "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 69,
+              "id": 93,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "249:2:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 96,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 64,
-                  "indexed": true,
-                  "name": "from",
+                  "id": 95,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "230:20:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 63,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "230:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 66,
-                  "indexed": true,
-                  "name": "to",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "252:18:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 65,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "252:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 68,
-                  "indexed": false,
-                  "name": "value",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "272:13:1",
+                  "scope": 97,
+                  "src": "275:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -417,10 +533,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 67,
+                    "id": 94,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "272:7:1",
+                    "src": "275:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -430,98 +546,111 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "229:57:1"
+              "src": "274:9:2"
             },
-            "src": "215:72:1"
+            "scope": 98,
+            "src": "231:53:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
           }
         ],
-        "scope": 72,
-        "src": "26:263:1"
+        "scope": 99,
+        "src": "49:237:2"
       }
     ],
-    "src": "0:289:1"
+    "src": "0:287:2"
   },
   "legacyAST": {
-    "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/ERC20Basic.sol",
+    "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/IZoiToken.sol",
     "exportedSymbols": {
-      "ERC20Basic": [
-        71
+      "IZoiToken": [
+        98
       ]
     },
-    "id": 72,
+    "id": 99,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 44,
+        "id": 73,
         "literals": [
           "solidity",
           "^",
           "0.4",
-          ".23"
+          ".20"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:1"
+        "src": "0:24:2"
       },
       {
-        "baseContracts": [],
-        "contractDependencies": [],
+        "absolutePath": "/Users/elenaderymova/projects/work/farmatrust/zoi-platform/contracts/ERC20.sol",
+        "file": "./ERC20.sol",
+        "id": 74,
+        "nodeType": "ImportDirective",
+        "scope": 99,
+        "sourceUnit": 43,
+        "src": "26:21:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 75,
+              "name": "ERC20",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 42,
+              "src": "71:5:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC20_$42",
+                "typeString": "contract ERC20"
+              }
+            },
+            "id": 76,
+            "nodeType": "InheritanceSpecifier",
+            "src": "71:5:2"
+          }
+        ],
+        "contractDependencies": [
+          42,
+          71
+        ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 71,
+        "id": 98,
         "linearizedBaseContracts": [
+          98,
+          42,
           71
         ],
-        "name": "ERC20Basic",
+        "name": "IZoiToken",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": false,
-            "id": 46,
-            "name": "totalSupply",
-            "nodeType": "VariableDeclaration",
-            "scope": 71,
-            "src": "50:26:1",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
-            },
-            "typeName": {
-              "id": 45,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "50:7:1",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
-            },
-            "value": null,
-            "visibility": "public"
-          },
-          {
             "body": null,
             "documentation": null,
-            "id": 53,
+            "id": 83,
             "implemented": false,
             "isConstructor": false,
-            "isDeclaredConst": true,
+            "isDeclaredConst": false,
             "modifiers": [],
-            "name": "balanceOf",
+            "name": "setZoiIssuer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 49,
+              "id": 79,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 48,
-                  "name": "who",
+                  "id": 78,
+                  "name": "_zoiIssuer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 53,
-                  "src": "99:11:1",
+                  "scope": 83,
+                  "src": "103:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -529,10 +658,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 47,
+                    "id": 77,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "99:7:1",
+                    "src": "103:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -542,69 +671,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "98:13:1"
+              "src": "102:20:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 52,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 51,
+                  "id": 81,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 53,
-                  "src": "133:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 50,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "133:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "132:9:1"
-            },
-            "scope": 71,
-            "src": "80:62:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": null,
-            "documentation": null,
-            "id": 62,
-            "implemented": false,
-            "isConstructor": false,
-            "isDeclaredConst": false,
-            "modifiers": [],
-            "name": "transfer",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 58,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 55,
-                  "name": "to",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "163:10:1",
+                  "scope": 83,
+                  "src": "140:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -612,10 +692,59 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 54,
+                    "id": 80,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "163:7:1",
+                    "src": "140:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "139:9:2"
+            },
+            "scope": 98,
+            "src": "81:68:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 92,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "issueZoi",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 88,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 85,
+                  "name": "_user",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 92,
+                  "src": "170:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 84,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -626,11 +755,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 57,
-                  "name": "value",
+                  "id": 87,
+                  "name": "_zoiAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "175:13:1",
+                  "scope": 92,
+                  "src": "185:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -638,10 +767,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 56,
+                    "id": 86,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "175:7:1",
+                    "src": "185:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -651,20 +780,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "162:27:1"
+              "src": "169:35:2"
             },
             "payable": false,
             "returnParameters": {
-              "id": 61,
+              "id": 91,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 60,
+                  "id": 90,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 62,
-                  "src": "206:4:1",
+                  "scope": 92,
+                  "src": "222:4:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -672,10 +801,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 59,
+                    "id": 89,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "206:4:1",
+                    "src": "222:4:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -685,86 +814,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "205:6:1"
+              "src": "221:6:2"
             },
-            "scope": 71,
-            "src": "145:67:1",
+            "scope": 98,
+            "src": "152:76:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
-            "visibility": "public"
+            "visibility": "external"
           },
           {
-            "anonymous": false,
+            "body": null,
             "documentation": null,
-            "id": 70,
-            "name": "Transfer",
-            "nodeType": "EventDefinition",
+            "id": 97,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "zoiIssued",
+            "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 69,
+              "id": 93,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "249:2:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 96,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 64,
-                  "indexed": true,
-                  "name": "from",
+                  "id": 95,
+                  "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "230:20:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 63,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "230:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 66,
-                  "indexed": true,
-                  "name": "to",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "252:18:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 65,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "252:7:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 68,
-                  "indexed": false,
-                  "name": "value",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 70,
-                  "src": "272:13:1",
+                  "scope": 97,
+                  "src": "275:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -772,10 +857,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 67,
+                    "id": 94,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "272:7:1",
+                    "src": "275:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -785,16 +870,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "229:57:1"
+              "src": "274:9:2"
             },
-            "src": "215:72:1"
+            "scope": 98,
+            "src": "231:53:2",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
           }
         ],
-        "scope": 72,
-        "src": "26:263:1"
+        "scope": 99,
+        "src": "49:237:2"
       }
     ],
-    "src": "0:289:1"
+    "src": "0:287:2"
   },
   "compiler": {
     "name": "solc",
@@ -802,5 +891,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-12-13T07:20:19.088Z"
+  "updatedAt": "2018-12-13T07:20:19.089Z"
 }
