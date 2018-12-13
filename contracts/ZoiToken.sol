@@ -15,9 +15,11 @@ contract ZoiToken is Ownable, IZoiToken {
   mapping(address => uint256) public balances;
   mapping (address => mapping (address => uint256)) internal allowed;
 
-  event Approval(address indexed owner, address indexed spender, uint256 value);
-  event Transfer(address indexed from, address indexed to, uint256 value);
-  event ZoiIssued(address indexed from, address indexed to, uint256 indexed amount, uint256 timestamp);
+  event Approval(address owner, address spender, uint256 value);
+  event Transfer(address from, address to, uint256 value);
+  event ZoiIssued(address from, address to, uint256 amount, uint256 timestamp);
+  event Burn(address Burner, uint256 value);
+
   // Amount of ZOI issued.
   uint256 public zoiIssued = 0;
 
@@ -76,6 +78,34 @@ contract ZoiToken is Ownable, IZoiToken {
   {
     return zoiIssued;
   }
+
+  /**
+     * @notice Burns all tokens from msg.sender.
+     * @param _amount number of tokens for burning
+     */
+  function burn(uint256 _amount) public {
+    burnBase(msg.sender, _amount);
+  }
+
+  /**
+   * @notice Burns a specific amount of tokens. owner can burn only if user bought tokens not with ether
+   * @param _address address of token's owner
+   */
+  function burnFrom(address _address) public onlyZoiIssuer {
+    burnBase(_address, balances[_address]);
+  }
+
+  /**
+   * @notice Burns all tokens of user.
+   * @param _address address of token's owner
+   * @param _amount number of tokens for burning
+   */
+  function burnBase(address _address, uint256 _amount) internal {
+    zoiIssued -= _amount;
+    balances[_address] -= _amount;
+    emit Burn(_address, _amount);
+  }
+
 
   /**
    * @dev Transfer tokens from one address to another.

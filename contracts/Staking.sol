@@ -30,7 +30,7 @@ contract Staking is Ownable {
     * @dev set an address for ZOI token to be able to call issueZoi() function while claiming tokens
     * @param newZoi proper address of ZOI token. Could be upgraded in case of different versions/releases
     */
-  function setZoiToken(IZoiToken newZoi) onlyOwner {
+  function setZoiToken(IZoiToken newZoi) public onlyOwner {
     zoiToken = IZoiToken(newZoi);
   }
 
@@ -38,7 +38,7 @@ contract Staking is Ownable {
     * @dev set an address for FTT token to be able to call issueZoi() function while claiming tokens
     * @param newFtt proper address of FTT token. Could be upgraded in case of different versions/releases
     */
-  function setFttToken(address newFtt) onlyOwner {
+  function setFttToken(address newFtt) public onlyOwner {
     fttToken = ERC20(newFtt);
   }
 
@@ -93,5 +93,5 @@ contract Staking is Ownable {
   /**
     * @dev for receiving a plain Ether for the contract to be able to call ZoiToken. Could be used only by contract owner
     */
-  function() payable onlyOwner {}
+  function() payable public onlyOwner {}
 }
