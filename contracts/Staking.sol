@@ -85,6 +85,7 @@ contract Staking is Ownable {
     */
   function releaseStake(uint256 _amount) public returns (bool) {
     require(StakeMap[fttToken][msg.sender].amount > 0);
+    require (_amount <= StakeMap[fttToken][msg.sender].amount);
     tokenTotalStaked[fttToken] = tokenTotalStaked[fttToken].sub(_amount);
     fttToken.transfer(msg.sender, _amount);
     StakeMap[fttToken][msg.sender].amount = StakeMap[fttToken][msg.sender].amount.sub(_amount);
